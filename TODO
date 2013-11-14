@@ -1,18 +1,17 @@
 TODO items for rpm packaging
 
 -resolve issues with logging and filenaming
-    start.log - TODO - fix naming syntax, probably need to rebuild start.jar.
-    problem with using jetty-logging.properties to specify slf4j - TODO
-    log rotation for gc.log - DONE
-    logging page in solr admin UI doesnt work
+    configure log4j.properties for each sub service (jetty, zookeeper, solr)
+    start.log filenaming
+    logging page in solr admin UI doesnt work with log4j using xml config
 
 -corrective action scripts for OOM and ERROR conditions
     restart service?
-    email alert - DONE
     save dump/trace file?
 
--review recommended jetty config options for JAVA (as described in the jetty.xml from jetty distribution)
-    solr GC tuning?
+-clean up java GC tuning settings
+    reference: http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
+    reference: http://wiki.apache.org/solr/ShawnHeisey#GC_Tuning
 
 -implement some basic default security on the jetty and solr listeners
     passwords?

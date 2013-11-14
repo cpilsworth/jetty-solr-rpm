@@ -1,19 +1,17 @@
-RPM build for Solr using builtin Jetty and logback logging framework
+RPM build for Solr using builtin Jetty
 
-solr version 4.4.0
+solr version 4.5.1
 jetty version 8.1.10.v20130312
-slf4j version 1.7.5
-logback version 1.0.13
 
 
 goal is a serviceable base rpm for deployment of solr on jetty
 
-Logging is handled by logback framework
+Logging is now handled by log4j framework (i prefer logback, but the Web UI in solr doesnt yet work correctly with logback)
   -logging for jetty, solr, and the local zookeeper services is using similar configuration settings (rotation, formatting, etc)
   -RFC3339 datetime format + local TZ label for service log events
   -combined format for jetty HTTP request logs
-  NOTE: GC logging is not handled by logback
-  NOTE: jetty start log is not handled by logback
+  NOTE: GC logging is not handled by log4j
+  NOTE: jetty start log is not handled by log4j
 
 JMX interface is enabled in a firewall friendly manner on TCP port 1099 with simple authentication
   -read access credentials: monitorRole/mrpasswd

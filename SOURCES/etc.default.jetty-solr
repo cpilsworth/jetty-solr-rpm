@@ -9,27 +9,39 @@ JETTY_ARGS="OPTIONS=Server,jmx,ext,resources etc/jetty-jmx.xml etc/jetty.xml etc
 # JAVA settings for jetty-solr
 JAVA_HOME=JAVA_HOME_REPLACE/java
 JAVA_OPTIONS="-Dsolr.solr.home=$JETTY_HOME/solr $JAVA_OPTIONS"
-JAVA_OPTIONS="-Xmx1024m -Xms512m $JAVA_OPTIONS"
+
+# set Xmx between 25-50% of total physical RAM as a starting point
+JAVA_OPTIONS="-Xms768m -Xmx1024m $JAVA_OPTIONS"
+
+# set size of Perm Gen
 JAVA_OPTIONS="-XX:PermSize=64m -XX:MaxPermSize=128m $JAVA_OPTIONS"
+
+# use one of these to set the sixe of new generation to 40-50% of total heap
+#JAVA_OPTIONS="-XX:NewSize=384m -XX:MaxNewSize=512m -XX:SurvivorRatio=8 $JAVA_OPTIONS"
+JAVA_OPTIONS="-XX:NewRatio=1 -XX:SurvivorRatio=8 $JAVA_OPTIONS"
+
+JAVA_OPTIONS="-XX:MaxTenuringThreshold=8 $JAVA_OPTIONS"
+#JAVA_OPTIONS="-XX:TargetSurvivorRatio=50 $JAVA_OPTIONS"
+
+JAVA_OPTIONS="-XX:+DisableExplicitGC $JAVA_OPTIONS"
+
+# use CMS GC
+JAVA_OPTIONS="-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:-UseAdaptiveSizePolicy -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=1 -XX:+CMSParallelRemarkEnabled -XX:+CMSScavengeBeforeRemark $JAVA_OPTIONS"
+
+# UseLargePages requires Huge Pages configured in kernel
+JAVA_OPTIONS="-XX:+UseLargePages $JAVA_OPTIONS"
+
+JAVA_OPTIONS="-XX:+AggressiveOpts $JAVA_OPTIONS"
+
 JAVA_OPTIONS="-Xloggc:$JETTY_LOGS/gc.log -verbose:gc -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution -XX:+PrintCommandLineFlags -XX:+PrintHeapAtGC -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime $JAVA_OPTIONS"
 JAVA_OPTIONS="-XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10m $JAVA_OPTIONS"
 JAVA_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/jetty-solr-dump.hprof $JAVA_OPTIONS"
 JAVA_OPTIONS="-XX:OnError=$JETTY_HOME/etc/java_error.sh -XX:OnOutOfMemoryError=$JETTY_HOME/etc/java_oom.sh $JAVA_OPTIONS"
 
-# some additional java GC options suggested by jetty
-JAVA_OPTIONS="-XX:+DisableExplicitGC $JAVA_OPTIONS"
-JAVA_OPTIONS="-XX:+UseConcMarkSweepGC $JAVA_OPTIONS"
-#JAVA_OPTIONS="-XX:ParallelCMSThreads=2 $JAVA_OPTIONS"
-#JAVA_OPTIONS="-XX:+CMSClassUnloadingEnabled $JAVA_OPTIONS"
-#JAVA_OPTIONS="-XX:+UseCMSCompactAtFullCollection $JAVA_OPTIONS"
-JAVA_OPTIONS="-XX:CMSInitiatingOccupancyFraction=80 $JAVA_OPTIONS"
-
 # other solr GC tuning suggestions
 # ref: https://wiki.apache.org/solr/ShawnHeisey#GC_Tuning
 
 # SOLR settings for jetty-solr
-SOLRBOOTCONFDIR=$JETTY_HOME/solr/collection1/conf
-SOLRCONFNAME=exampleconf
 SOLRNUMSHARDS=1
 
 # edit for zookeeper server info
@@ -38,7 +50,7 @@ ZOOKEEPER02=fookeeper02.domain.com:2181
 ZOOKEEPER03=fookeeper03.domain.com:2181
 
 # uncomment to bootstrap
-JAVA_OPTIONS="-Dbootstrap_confdir=$SOLRBOOTCONFDIR -Dcollection.configName=$SOLRCONFNAME -DnumShards=$SOLRNUMSHARDS $JAVA_OPTIONS"
+JAVA_OPTIONS="-Dbootstrap_conf=true -DnumShards=$SOLRNUMSHARDS $JAVA_OPTIONS"
 
 # enable built-in zookeeper (non-ensemble)
 # by default the built-in zookeeper runs at (JETTY_PORT + 1000)

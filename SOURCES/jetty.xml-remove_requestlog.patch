@@ -1,0 +1,43 @@
+--- example/etc/jetty.xml.dist	2013-07-31 13:58:16.140130000 -0700
++++ example/etc/jetty.xml	2013-07-31 13:59:19.442472000 -0700
+@@ -111,40 +111,11 @@
+            <Item>
+              <New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler"/>
+            </Item>
+-           <Item>
+-             <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
+-           </Item>
+          </Array>
+         </Set>
+       </New>
+     </Set>
+     
+-    <!-- =========================================================== -->
+-    <!-- Configure Request Log                                       -->
+-    <!-- =========================================================== -->
+-    <!-- 
+-    <Ref id="Handlers">
+-      <Call name="addHandler">
+-        <Arg>
+-          <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler">
+-            <Set name="requestLog">
+-              <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
+-                <Set name="filename">
+-                   logs/request.yyyy_mm_dd.log
+-                </Set>
+-                <Set name="filenameDateFormat">yyyy_MM_dd</Set>
+-                <Set name="retainDays">90</Set>
+-                <Set name="append">true</Set>
+-                <Set name="extended">false</Set>
+-                <Set name="logCookies">false</Set>
+-                <Set name="LogTimeZone">UTC</Set>
+-              </New>
+-            </Set>
+-          </New>
+-        </Arg>
+-      </Call>
+-    </Ref>
+-    -->
+ 
+     <!-- =========================================================== -->
+     <!-- extra options                                               -->

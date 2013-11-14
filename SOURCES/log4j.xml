@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
+    
+
+<!-- begin appender section --> 
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="JETTY_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="./logs/jetty.log" />
+        <param name="DatePattern" value=".yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
+        </layout>
+    </appender>
+ 
+    <appender name="ZK_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="./logs/zookeeper.log" />
+        <param name="DatePattern" value=".yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
+        </layout>
+    </appender>
+ 
+    <appender name="SOLR_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="./logs/solr.log" />
+        <param name="DatePattern" value=".yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
+        </layout>
+    </appender>
+<!-- end appender section --> 
+
+
+<!-- begin logger section --> 
+    <!--  define where to send specific events  -->
+    <logger name="org.eclipse" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="JETTY_LOG_FILE"/>
+    </logger>
+ 
+    <logger name="org.apache.solr" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="SOLR_LOG_FILE"/>
+    </logger>
+
+    <logger name="org.apache.lucene" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="SOLR_LOG_FILE"/>
+    </logger>
+ 
+    <logger name="org.apache.http" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="SOLR_LOG_FILE"/>
+    </logger>
+ 
+    <logger name="org.apache.commons" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="SOLR_LOG_FILE"/>
+    </logger>
+ 
+    <logger name="org.apache.zookeeper" additivity="false">
+	<level value="INFO" />
+        <appender-ref ref="ZK_LOG_FILE"/>
+    </logger>
+<!-- end logger section --> 
+
+
+<!-- begin root section --> 
+    <root>
+        <priority value="INFO" />
+        <appender-ref ref="STDOUT" />
+    <!-- send other logging info to jetty.log -->
+        <appender-ref ref="JETTY_LOG_FILE" />
+    </root>
+<!-- end root section --> 
+
+</log4j:configuration>

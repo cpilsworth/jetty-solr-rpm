@@ -6,7 +6,7 @@
 
 Name:			jetty-solr
 Version:		%{sver}
-Release:		1%{?dist}
+Release:		2%{?dist}
 Summary:		Solr
 License:		GPL
 URL:			http://lucene.apache.org/solr/
@@ -17,8 +17,6 @@ Source3:		jmx.passwd
 Source4:		jmx.access
 Source5:		java_error.sh
 Source6:		java_oom.sh
-# using log4j.xml doesnt seem to work with solr UI logging display
-#Source7:		log4j.xml
 Patch0:			jetty.xml-remove_requestlog.patch
 Patch1:			log4j.properties-change_pattern.patch
 Patch2:			jetty-requestlog.xml-configure_filenaming.patch
@@ -77,7 +75,6 @@ mv "%{buildroot}%{_prefix}/jetty-solr/solr/collection1" "%{buildroot}%{_prefix}/
 %__install -D -m0644  "%{SOURCE4}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.access
 %__install -D -m0755  "%{SOURCE5}" %{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh
 %__install -D -m0755  "%{SOURCE6}" %{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh
-#%__install -D -m0644  "%{SOURCE7}" %{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml
 %__install -D -m0755  $RPM_BUILD_DIR/jetty-distribution-%{jver}/bin/jetty.sh %{buildroot}/etc/init.d/jetty-solr
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-requestlog.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-requestlog.xml
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-jmx.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-jmx.xml
@@ -88,8 +85,6 @@ sed -i "s|./logs|%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/jetty-r
 sed -i "s|notify@domain.com|%{_notify_email}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh"
 sed -i "s|notify@domain.com|%{_notify_email}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh"
 rm "%{buildroot}%{_prefix}/jetty-solr/etc/logging.properties"
-#rm "%{buildroot}%{_prefix}/jetty-solr/resources/log4j.properties"
-#sed -i "s|./logs|%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml"
 sed -i "s|=logs|=%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/resources/log4j.properties"
 
 %if "%{_collection_name}" == "collection1"
@@ -144,6 +139,10 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %changelog
+
+* Thu Nov 14 2013 Boogie Shafer <boogieshafer@yahoo.com>
+- 4.5.1-2
+- configure log4j.properties to create logfiles by service
 
 * Thu Nov 14 2013 Boogie Shafer <boogieshafer@yahoo.com>
 - 4.5.1-1

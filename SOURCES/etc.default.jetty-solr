@@ -59,3 +59,6 @@ JAVA_OPTIONS="-DzkRun -DzkHost=localhost:9983 $JAVA_OPTIONS"
 # or, use remote zookeeper ensemble
 # JAVA_OPTIONS="-DzkHost=$ZOOKEEPER01,$ZOOKEEPER02,$ZOOKEEPER03 $JAVA_OPTIONS"
 
+# uncomment to troubleshoot log4j problems. writes to start.log
+#JAVA_OPTIONS="-Dlog4j.debug $JAVA_OPTIONS"
+

@@ -9,3 +9,4 @@ SOURCES/jetty-distribution-*.tar.gz*
 SOURCES/logback-*.tar.gz*
 SOURCES/log4j-*.tar.gz*
 SOURCES/slf4j-*.tar.gz*
+SOURCES/apache-*.tar.gz*

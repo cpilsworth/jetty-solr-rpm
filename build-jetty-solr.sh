@@ -1,6 +1,7 @@
 #!/bin/sh
 solrversion="4.5.1"
 jettyversion="8.1.10.v20130312"
+log4jextrasversion="1.1"
 
 rm -rf BUILD BUILDROOT tmp || true
 mkdir -p BUILD BUILDROOT RPMS SRPMS
@@ -19,4 +20,13 @@ then
     wget "http://archive.eclipse.org/jetty/$jettyversion/dist/jetty-distribution-$jettyversion.tar.gz.md5" -O SOURCES/jetty-distribution-$jettyversion.tar.gz.md5
 fi
 
-rpmbuild -ba --target=noarch --define="_topdir $PWD" --define="_tmppath $PWD/tmp" --define="sver $solrversion" --define="jver $jettyversion" jetty-solr.spec
+if [ ! -f SOURCES/apache-log4j-extras-$log4jextrasversion.tar.gz ];
+then
+    wget "http://archive.apache.org/dist/logging/log4j/companions/extras/$log4jextrasversion/apache-log4j-extras-$log4jextrasversion.tar.gz" -O SOURCES/apache-log4j-extras-$log4jextrasversion.tar.gz
+#    wget "http://www.us.apache.org/dist/logging/log4j/extras/$log4jextrasversion/apache-log4j-extras-$log4jextrasversion-bin.tar.gz" -O SOURCES/apache-log4j-extras-$log4jextrasversion-bin.tar.gz
+    wget "http://archive.apache.org/dist/logging/log4j/companions/extras/$log4jextrasversion/apache-log4j-extras-$log4jextrasversion.tar.gz.md5" -O SOURCES/apache-log4j-extras-$log4jextrasversion.tar.gz.md5
+#    wget "http://www.us.apache.org/dist/logging/log4j/extras/$log4jextrasversion/apache-log4j-extras-$log4jextrasversion-bin.tar.gz.md5" -O SOURCES/apache-log4j-extras-$log4jextrasversion-bin.tar.gz.md5
+fi
+
+
+rpmbuild -ba --target=noarch --define="_topdir $PWD" --define="_tmppath $PWD/tmp" --define="sver $solrversion" --define="jver $jettyversion" --define="l4xver $log4jextrasversion" jetty-solr.spec

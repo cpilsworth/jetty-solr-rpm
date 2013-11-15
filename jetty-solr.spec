@@ -2,24 +2,26 @@
 %define _logprefix /var/log/solr
 %define _javaprefix /usr/lib/jvm
 %define _collection_name core01
-%define _core02 core02
+%define _core02_name core02
 %define _core02_enabled false
 %define _notify_email youremail@yourdomain.com
 
 Name:			jetty-solr
 Version:		%{sver}
-Release:		3%{?dist}
+Release:		4%{?dist}
 Summary:		Solr
 License:		GPL
 URL:			http://lucene.apache.org/solr/
 Source:			http://www.us.apache.org/dist/lucene/solr/%{version}/solr-%{version}.tgz
 Source1:                http://download.eclipse.org/jetty/%{jver}/dist/jetty-distribution-%{jver}.tar.gz
-Source2:		etc.default.jetty-solr
-Source3:		jmx.passwd
-Source4:		jmx.access
-Source5:		java_error.sh
-Source6:		java_oom.sh
-Source7:		log4j.xml
+#Source2:		http://www.us.apache.org/dist/logging/log4j/extras/%{l4xver}/apache-log4j-extras-${l4xver}-bin.tar.gz
+Source2:		http://archive.apache.org/dist/logging/log4j/companions/extras/%{l4xver}/apache-log4j-extras-%{l4xver}.tar.gz
+Source3:		etc.default.jetty-solr
+Source4:		jmx.passwd
+Source5:		jmx.access
+Source6:		java_error.sh
+Source7:		java_oom.sh
+Source8:		log4j.xml
 Patch0:			jetty.xml-remove_requestlog.patch
 Patch1:			jetty-requestlog.xml-configure_filenaming.patch
 Patch2:			jetty-jmx.xml-enable_rmi_tcp1099.patch
@@ -35,7 +37,9 @@ Requires:		java7 => 1:1.7.0
 Requires:		mailx
 
 %description
-%{summary}
+RPM build for Solr using builtin Jetty
+https://github.com/boogieshafer/jetty-solr-rpm
+
 %prep
 %setup -q -n solr-%{version}
 rm -r example/example-DIH
@@ -44,26 +48,30 @@ rm -r example/example-schemaless
 rm -r example/multicore
 rm example/etc/logging.properties
 rm example/resources/log4j.properties
-mkdir -p example/solr/%{_core02}
-cp -R example/solr/collection1/conf example/solr/%{_core02}/conf
-mv example/solr/%{_core02}/conf/schema.xml example/solr/%{_core02}/conf/schema-%{_core02}.xml
-mv example/solr/%{_core02}/conf/solrconfig.xml example/solr/%{_core02}/conf/solrconfig-%{_core02}.xml
-echo "name="%{_core02} > example/solr/%{_core02}/core.properties.unloaded
-echo "schema=schema-"%{_core02}".xml" >> example/solr/%{_core02}/core.properties.unloaded
-echo "config=solrconfig-"%{_core02}".xml" >> example/solr/%{_core02}/core.properties.unloaded
-echo "loadOnStartup="%{_core02_enabled} >> example/solr/%{_core02}/core.properties.unloaded
+rm example/cloud-scripts/zkcli.bat
+rm dist/solr-%{version}.war
+mkdir -p example/solr/%{_core02_name}
+cp -R example/solr/collection1/conf example/solr/%{_core02_name}/conf
+mv example/solr/%{_core02_name}/conf/schema.xml example/solr/%{_core02_name}/conf/schema-%{_core02_name}.xml
+mv example/solr/%{_core02_name}/conf/solrconfig.xml example/solr/%{_core02_name}/conf/solrconfig-%{_core02_name}.xml
+echo "name="%{_core02_name} > example/solr/%{_core02_name}/core.properties.unloaded
+echo "schema=schema-"%{_core02_name}".xml" >> example/solr/%{_core02_name}/core.properties.unloaded
+echo "config=solrconfig-"%{_core02_name}".xml" >> example/solr/%{_core02_name}/core.properties.unloaded
+echo "loadOnStartup="%{_core02_enabled} >> example/solr/%{_core02_name}/core.properties.unloaded
 %if "%{_core02_enabled}" == "true"
-mv example/solr/%{_core02}/core.properties.unloaded example/solr/%{_core02}/core.properties
+mv example/solr/%{_core02_name}/core.properties.unloaded example/solr/%{_core02_name}/core.properties
 %else
 # no need to rename
 %endif
 %patch0 -p0
+
 %setup -q -D -T -b 1 -n jetty-distribution-%{jver}
 %patch1 -p0
 %patch2 -p0
 %patch3 -p0
 %patch4 -p0
 
+%setup -q -D -T -b 2 -n apache-log4j-extras-%{l4xver}
 %build
 
 %install
@@ -76,6 +84,7 @@ cp -pr $RPM_BUILD_DIR/solr-%{version}/docs "%{buildroot}%{_prefix}"
 cp -pr $RPM_BUILD_DIR/solr-%{version}/licenses "%{buildroot}%{_prefix}"
 %__install -d "%{buildroot}%{_prefix}/jetty-solr"
 cp -pr $RPM_BUILD_DIR/solr-%{version}/example/* "%{buildroot}%{_prefix}/jetty-solr"
+cp -p $RPM_BUILD_DIR/apache-log4j-extras-%{l4xver}/apache-log4j-extras-%{l4xver}.jar "%{buildroot}%{_prefix}/jetty-solr/lib/ext"
 %if "%{_collection_name}" == "collection1"
 # no need to rename
 %else
@@ -86,12 +95,12 @@ mv "%{buildroot}%{_prefix}/jetty-solr/solr/collection1" "%{buildroot}%{_prefix}/
 %__install -d "%{buildroot}"/etc/default
 %__install -d "%{buildroot}"/etc/init.d
 %__install -d "%{buildroot}%{_logprefix}"
-%__install -D -m0644  "%{SOURCE2}" %{buildroot}/etc/default/jetty-solr
-%__install -D -m0600  "%{SOURCE3}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.passwd
-%__install -D -m0644  "%{SOURCE4}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.access
-%__install -D -m0755  "%{SOURCE5}" %{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh
-%__install -D -m0755  "%{SOURCE6}" %{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh
-%__install -D -m0644  "%{SOURCE7}" %{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml
+%__install -D -m0644  "%{SOURCE3}" %{buildroot}/etc/default/jetty-solr
+%__install -D -m0600  "%{SOURCE4}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.passwd
+%__install -D -m0644  "%{SOURCE5}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.access
+%__install -D -m0755  "%{SOURCE6}" %{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh
+%__install -D -m0755  "%{SOURCE7}" %{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh
+%__install -D -m0644  "%{SOURCE8}" %{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml
 %__install -D -m0755  $RPM_BUILD_DIR/jetty-distribution-%{jver}/bin/jetty.sh %{buildroot}/etc/init.d/jetty-solr
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-requestlog.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-requestlog.xml
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-jmx.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-jmx.xml
@@ -155,6 +164,13 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %changelog
+
+* Fri Nov 15 2013 Boogie Shafer <boogieshafer@yahoo.com>
+- 4.5.1-4
+- add lib4j extras to enable compression on rotation 
+- make name of second core more obvious
+- clean up log naming
+- remove extra solr war file from rpm
 
 * Fri Nov 15 2013 Boogie Shafer <boogieshafer@yahoo.com>
 - 4.5.1-3

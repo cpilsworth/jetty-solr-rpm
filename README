@@ -2,23 +2,42 @@ RPM build for Solr using builtin Jetty
 
 solr version 4.5.1
 jetty version 8.1.10.v20130312
+log4j extras version 1.1
 
 
 goal is a serviceable base rpm for deployment of solr on jetty
 
-Logging is now handled by log4j framework (i prefer logback, but the Web UI in solr doesnt yet work correctly with logback)
+Usage:
+======
+
+0. git clone git@github.com:boogieshafer/jetty-solr-rpm.git
+
+1. edit configurable settings in jetty-solr.spec as necessary
+ 
+2. run the build-jetty-solr.sh script to create the RPM. it should download what it needs and kickoff the rpmbuild process.
+
+3. jetty-solr rpm will be in RPMS/noarch directory
+
+
+Package Notes: 
+==============
+
+Logging is now handled by log4j framework
+  I prefer logback, and this script used to bundle it, but the admin UI in SOLR doesnt yet work correctly with logback
   -logging for jetty, solr, and the local zookeeper services is using similar configuration settings (rotation, formatting, etc)
   -RFC3339 datetime format + local TZ label for service log events
   -combined format for jetty HTTP request logs
-  NOTE: GC logging is not handled by log4j, rotated by JVM
-  NOTE: jetty start log is not handled by log4j, not rotated
+  -log4j extras library is installed to handle log rotation with compression
+  -the SOLR admin UI seems to require SOLR related events sent to root logger
+  -GC logging is enabled by default, not handled by log4j, it is rotated by JVM
+  -the jetty start log is not handled by log4j, not rotated
 
 JMX interface is enabled in a firewall friendly manner on TCP port 1099 with simple authentication
   -read access credentials: monitorRole/mrpasswd
   -read/write access credentials: controlRole/crpasswd
   -reference: http://wiki.eclipse.org/Jetty/Tutorial/JMX
 
-very basic script to send emails on java errors or OOM
+there is a very basic script to send emails on java Errors or Out Of Memory to a configurable address
 
 
 RPM build process was adapted from https://github.com/jfroche/solr-rpm

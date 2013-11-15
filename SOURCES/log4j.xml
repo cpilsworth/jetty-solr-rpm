@@ -11,25 +11,31 @@
         </layout>
     </appender>
 
-    <appender name="JETTY_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="./logs/jetty.log" />
-        <param name="DatePattern" value=".yyyy-MM-dd" />
+    <appender name="JETTY_LOG_FILE" class="org.apache.log4j.rolling.RollingFileAppender">
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+                <param name="FileNamePattern" value="/var/log/solr/jetty.%d{yyyy-MM-dd}.gz" />
+                <param name="ActiveFileName" value="/var/log/solr/jetty.log" />
+        </rollingPolicy>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
         </layout>
     </appender>
  
-    <appender name="ZK_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="./logs/zookeeper.log" />
-        <param name="DatePattern" value=".yyyy-MM-dd" />
+    <appender name="ZK_LOG_FILE" class="org.apache.log4j.rolling.RollingFileAppender">
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+                <param name="FileNamePattern" value="/var/log/solr/zookeeper.%d{yyyy-MM-dd}.gz" />
+                <param name="ActiveFileName" value="/var/log/solr/zookeeper.log" />
+        </rollingPolicy>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
         </layout>
     </appender>
  
-    <appender name="SOLR_LOG_FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="file" value="./logs/solr.log" />
-        <param name="DatePattern" value=".yyyy-MM-dd" />
+    <appender name="SOLR_LOG_FILE" class="org.apache.log4j.rolling.RollingFileAppender">
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+                <param name="FileNamePattern" value="/var/log/solr/solr.%d{yyyy-MM-dd}.gz" />
+                <param name="ActiveFileName" value="/var/log/solr/solr.log" />
+        </rollingPolicy>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ z} [%t] %-5p %C{36} - %m%n" />
         </layout>

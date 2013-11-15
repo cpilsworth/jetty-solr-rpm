@@ -18,9 +18,19 @@ Usage:
 
 3. jetty-solr rpm will be in RPMS/noarch directory
 
+4. after installation edit /etc/default/jetty-solr
+
+5. use the jetty-solr init script to control the service
+
+
 
 Package Notes: 
 ==============
+
+RPM install will create a solr user and group to run the service
+
+JVM options are easily configured in /etc/default/jetty-solr
+  -you will probably want to configure Xms and Xmx for your hardware
 
 Logging is now handled by log4j framework
   I prefer logback, and this script used to bundle it, but the admin UI in SOLR doesnt yet work correctly with logback

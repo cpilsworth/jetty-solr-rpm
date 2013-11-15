@@ -88,22 +88,6 @@ http://logback.qos.ch/manual/configuration.html
         <appender-ref ref="JETTY_LOG_FILE"/>
     </logger>
  
-    <logger name="org.apache.solr" level="INFO" additivity="false">
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
-
-    <logger name="org.apache.lucene" level="INFO" additivity="false">
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
-    <logger name="org.apache.http" level="INFO" additivity="false">
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
-    <logger name="org.apache.commons" level="INFO" additivity="false">
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
     <logger name="org.apache.zookeeper" level="INFO" additivity="false">
         <appender-ref ref="ZK_LOG_FILE"/>
     </logger>
@@ -113,8 +97,8 @@ http://logback.qos.ch/manual/configuration.html
 <!-- begin root section --> 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
-    <!-- send other logging info to jetty.log -->
-        <appender-ref ref="JETTY_LOG_FILE" />
+    <!-- send other logging info to solr.log -->
+        <appender-ref ref="SOLR_LOG_FILE" />
     </root>
 <!-- end root section --> 
 

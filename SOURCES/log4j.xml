@@ -44,26 +44,6 @@
         <appender-ref ref="JETTY_LOG_FILE"/>
     </logger>
  
-    <logger name="org.apache.solr" additivity="false">
-	<level value="INFO" />
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
-
-    <logger name="org.apache.lucene" additivity="false">
-	<level value="INFO" />
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
-    <logger name="org.apache.http" additivity="false">
-	<level value="INFO" />
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
-    <logger name="org.apache.commons" additivity="false">
-	<level value="INFO" />
-        <appender-ref ref="SOLR_LOG_FILE"/>
-    </logger>
- 
     <logger name="org.apache.zookeeper" additivity="false">
 	<level value="INFO" />
         <appender-ref ref="ZK_LOG_FILE"/>
@@ -74,9 +54,8 @@
 <!-- begin root section --> 
     <root>
         <priority value="INFO" />
-        <appender-ref ref="STDOUT" />
-    <!-- send other logging info to jetty.log -->
-        <appender-ref ref="JETTY_LOG_FILE" />
+    <!-- send other logging info to solr.log -->
+        <appender-ref ref="SOLR_LOG_FILE" />
     </root>
 <!-- end root section --> 
 

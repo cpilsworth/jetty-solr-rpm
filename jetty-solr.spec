@@ -2,11 +2,13 @@
 %define _logprefix /var/log/solr
 %define _javaprefix /usr/lib/jvm
 %define _collection_name core01
+%define _core02 core02
+%define _core02_enabled false
 %define _notify_email youremail@yourdomain.com
 
 Name:			jetty-solr
 Version:		%{sver}
-Release:		2%{?dist}
+Release:		3%{?dist}
 Summary:		Solr
 License:		GPL
 URL:			http://lucene.apache.org/solr/
@@ -17,12 +19,12 @@ Source3:		jmx.passwd
 Source4:		jmx.access
 Source5:		java_error.sh
 Source6:		java_oom.sh
+Source7:		log4j.xml
 Patch0:			jetty.xml-remove_requestlog.patch
-Patch1:			log4j.properties-change_pattern.patch
-Patch2:			jetty-requestlog.xml-configure_filenaming.patch
-Patch3:			jetty-jmx.xml-enable_rmi_tcp1099.patch
-Patch4:			jetty.sh-redirect_init_output.patch
-Patch5:			jetty.sh-use_etc_default_jetty-solr.patch 
+Patch1:			jetty-requestlog.xml-configure_filenaming.patch
+Patch2:			jetty-jmx.xml-enable_rmi_tcp1099.patch
+Patch3:			jetty.sh-redirect_init_output.patch
+Patch4:			jetty.sh-use_etc_default_jetty-solr.patch 
 BuildRoot:		%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires(pre):		shadow-utils
 Requires(post):		chkconfig
@@ -40,13 +42,27 @@ rm -r example/example-DIH
 rm -r example/exampledocs
 rm -r example/example-schemaless
 rm -r example/multicore
+rm example/etc/logging.properties
+rm example/resources/log4j.properties
+mkdir -p example/solr/%{_core02}
+cp -R example/solr/collection1/conf example/solr/%{_core02}/conf
+mv example/solr/%{_core02}/conf/schema.xml example/solr/%{_core02}/conf/schema-%{_core02}.xml
+mv example/solr/%{_core02}/conf/solrconfig.xml example/solr/%{_core02}/conf/solrconfig-%{_core02}.xml
+echo "name="%{_core02} > example/solr/%{_core02}/core.properties.unloaded
+echo "schema=schema-"%{_core02}".xml" >> example/solr/%{_core02}/core.properties.unloaded
+echo "config=solrconfig-"%{_core02}".xml" >> example/solr/%{_core02}/core.properties.unloaded
+echo "loadOnStartup="%{_core02_enabled} >> example/solr/%{_core02}/core.properties.unloaded
+%if "%{_core02_enabled}" == "true"
+mv example/solr/%{_core02}/core.properties.unloaded example/solr/%{_core02}/core.properties
+%else
+# no need to rename
+%endif
 %patch0 -p0
-%patch1 -p0
 %setup -q -D -T -b 1 -n jetty-distribution-%{jver}
+%patch1 -p0
 %patch2 -p0
 %patch3 -p0
 %patch4 -p0
-%patch5 -p0
 
 %build
 
@@ -75,6 +91,7 @@ mv "%{buildroot}%{_prefix}/jetty-solr/solr/collection1" "%{buildroot}%{_prefix}/
 %__install -D -m0644  "%{SOURCE4}" %{buildroot}%{_prefix}/jetty-solr/resources/jmx.access
 %__install -D -m0755  "%{SOURCE5}" %{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh
 %__install -D -m0755  "%{SOURCE6}" %{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh
+%__install -D -m0644  "%{SOURCE7}" %{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml
 %__install -D -m0755  $RPM_BUILD_DIR/jetty-distribution-%{jver}/bin/jetty.sh %{buildroot}/etc/init.d/jetty-solr
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-requestlog.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-requestlog.xml
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-jmx.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-jmx.xml
@@ -84,8 +101,7 @@ sed -i "s|JAVA_HOME_REPLACE|%{_javaprefix}|g" "%{buildroot}/etc/default/jetty-so
 sed -i "s|./logs|%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/jetty-requestlog.xml"
 sed -i "s|notify@domain.com|%{_notify_email}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/java_error.sh"
 sed -i "s|notify@domain.com|%{_notify_email}|g" "%{buildroot}%{_prefix}/jetty-solr/etc/java_oom.sh"
-rm "%{buildroot}%{_prefix}/jetty-solr/etc/logging.properties"
-sed -i "s|=logs|=%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/resources/log4j.properties"
+sed -i "s|./logs|%{_logprefix}|g" "%{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml"
 
 %if "%{_collection_name}" == "collection1"
 # no need to rename
@@ -140,9 +156,12 @@ fi
 
 %changelog
 
-* Thu Nov 14 2013 Boogie Shafer <boogieshafer@yahoo.com>
-- 4.5.1-2
-- configure log4j.properties to create logfiles by service
+* Fri Nov 15 2013 Boogie Shafer <boogieshafer@yahoo.com>
+- 4.5.1-3
+- replace log4j.properties with log4j.xml
+- fix problem with SOLR GUI logging by sending solr logs to root logger
+- create second, disabled core02
+- fix URL to archived jetty build
 
 * Thu Nov 14 2013 Boogie Shafer <boogieshafer@yahoo.com>
 - 4.5.1-1

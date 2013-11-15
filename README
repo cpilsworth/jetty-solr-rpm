@@ -10,8 +10,8 @@ Logging is now handled by log4j framework (i prefer logback, but the Web UI in s
   -logging for jetty, solr, and the local zookeeper services is using similar configuration settings (rotation, formatting, etc)
   -RFC3339 datetime format + local TZ label for service log events
   -combined format for jetty HTTP request logs
-  NOTE: GC logging is not handled by log4j
-  NOTE: jetty start log is not handled by log4j
+  NOTE: GC logging is not handled by log4j, rotated by JVM
+  NOTE: jetty start log is not handled by log4j, not rotated
 
 JMX interface is enabled in a firewall friendly manner on TCP port 1099 with simple authentication
   -read access credentials: monitorRole/mrpasswd

@@ -2,8 +2,7 @@ TODO items for rpm packaging
 
 -resolve issues with logging and filenaming
     start.log filenaming to prevent timestamp
-    logging page in solr admin UI doesnt work with log4j using xml config
-    logging page in solr admin UI broke when i turned off additivity
+    logging page in admin UI seems to require SOLR events to root logger
 
 -corrective action scripts for OOM and ERROR conditions
     restart service?

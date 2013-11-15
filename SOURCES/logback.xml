@@ -96,7 +96,6 @@ http://logback.qos.ch/manual/configuration.html
 
 <!-- begin root section --> 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
     <!-- send other logging info to solr.log -->
         <appender-ref ref="SOLR_LOG_FILE" />
     </root>

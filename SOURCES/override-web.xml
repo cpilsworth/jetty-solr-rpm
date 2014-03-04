@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app 
+   xmlns="http://java.sun.com/xml/ns/javaee" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+   version="2.5"> 
+
+
+<!-- This web.xml format file is an override file that is applied to the test webapp AFTER
+     it has been configured by the default descriptor and the WEB-INF/web.xml descriptor -->
+
+ <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Solr Admin</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>BASIC</auth-method>     <!-- Use http basic authentication -->
+    <realm-name>Test Realm</realm-name>  <!-- Users are defined in this realm -->
+  </login-config>
+  
+</web-app>
+
+

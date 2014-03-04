@@ -9,8 +9,8 @@ Release:		1%{?dist}
 Summary:		Solr
 License:		GPL
 URL:			http://lucene.apache.org/solr/
-Source:			http://www.us.apache.org/dist/lucene/solr/%{version}/solr-%{version}.tgz
-Source1:        http://download.eclipse.org/jetty/%{jver}/dist/jetty-distribution-%{jver}.tar.gz
+Source:			http://archive.apache.org/dist/lucene/solr/%{version}/solr-%{version}.tgz
+Source1:        	http://download.eclipse.org/jetty/%{jver}/dist/jetty-distribution-%{jver}.tar.gz
 Source2:		http://archive.apache.org/dist/logging/log4j/companions/extras/%{l4xver}/apache-log4j-extras-%{l4xver}.tar.gz
 Source3:		etc.default.jetty-solr
 Source4:		jmx.passwd
@@ -20,6 +20,7 @@ Source7:		java_oom.sh
 Source8:		log4j.xml
 Source9:		solr.xml
 Source10:		override-web.xml
+Source11:		realm.properties
 Patch0:			jetty.xml-remove_requestlog.patch
 Patch1:			jetty-requestlog.xml-configure_filenaming.patch
 Patch2:			jetty-jmx.xml-enable_rmi_tcp1099.patch
@@ -44,11 +45,12 @@ rm -r example/example-DIH
 rm -r example/exampledocs
 rm -r example/example-schemaless
 rm -r example/multicore
-rm example/etc/logging.properties
+rm -r example/solr/collection1
+#rm example/etc/logging.properties
 rm example/resources/log4j.properties
 rm example/cloud-scripts/zkcli.bat
 rm dist/solr-%{version}.war
-%patch0 -p0
+#%patch0 -p0
 
 %setup -q -D -T -b 1 -n jetty-distribution-%{jver}
 %patch1 -p0
@@ -74,7 +76,6 @@ cp -pr $RPM_BUILD_DIR/solr-%{version}/licenses "%{buildroot}%{_prefix}"
 %__install -d "%{buildroot}%{_prefix}/jetty-solr"
 cp -pr $RPM_BUILD_DIR/solr-%{version}/example/* "%{buildroot}%{_prefix}/jetty-solr"
 cp -p $RPM_BUILD_DIR/apache-log4j-extras-%{l4xver}/apache-log4j-extras-%{l4xver}.jar "%{buildroot}%{_prefix}/jetty-solr/lib/ext"
-%__install -d "%{buildroot}%{_prefix}"/jetty-solr/solr/"%{_collection_name}"/data
 %__install -d "%{buildroot}%{_prefix}"/jetty-solr/solr/lib
 %__install -d "%{buildroot}"/etc/default
 %__install -d "%{buildroot}"/etc/init.d
@@ -87,9 +88,14 @@ cp -p $RPM_BUILD_DIR/apache-log4j-extras-%{l4xver}/apache-log4j-extras-%{l4xver}
 %__install -D -m0644  "%{SOURCE8}" %{buildroot}%{_prefix}/jetty-solr/resources/log4j.xml
 %__install -D -m0644  "%{SOURCE9}" %{buildroot}%{_prefix}/jetty-solr/contexts/solr.xml
 %__install -D -m0644  "%{SOURCE10}" %{buildroot}%{_prefix}/jetty-solr/contexts/solr.d/override-web.xml
+%__install -D -m0600  "%{SOURCE11}" %{buildroot}%{_prefix}/jetty-solr/etc/realm.properties
 %__install -D -m0755  $RPM_BUILD_DIR/jetty-distribution-%{jver}/bin/jetty.sh %{buildroot}/etc/init.d/jetty-solr
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-requestlog.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-requestlog.xml
 %__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-jmx.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-jmx.xml
+%__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-contexts.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-contexts.xml
+%__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-ssl.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-ssl.xml
+%__install -D -m0644  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/jetty-testrealm.xml %{buildroot}%{_prefix}/jetty-solr/etc/jetty-testrealm.xml
+%__install -D -m0600  $RPM_BUILD_DIR/jetty-distribution-%{jver}/etc/keystore %{buildroot}%{_prefix}/jetty-solr/etc/keystore
 sed -i "s|JETTY_HOME_REPLACE|%{_prefix}|g" "%{buildroot}/etc/default/jetty-solr"
 sed -i "s|JETTY_LOGS_REPLACE|%{_logprefix}|g" "%{buildroot}/etc/default/jetty-solr"
 sed -i "s|JAVA_HOME_REPLACE|%{_javaprefix}|g" "%{buildroot}/etc/default/jetty-solr"

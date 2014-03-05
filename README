@@ -51,4 +51,4 @@ JMX interface is enabled in a firewall friendly manner on TCP port 1099 with sim
 there is a very basic script to send emails on java Errors or Out Of Memory to a configurable address
 
 
-RPM build process was adapted from https://github.com/jfroche/solr-rpm
+RPM build process was adapted from https://github.com/boogieshafer/jetty-solr-rpm which was in turn adapted from https://github.com/jfroche/solr-rpm

@@ -52,3 +52,9 @@ there is a very basic script to send emails on java Errors or Out Of Memory to a
 
 
 RPM build process was adapted from https://github.com/boogieshafer/jetty-solr-rpm which was in turn adapted from https://github.com/jfroche/solr-rpm
+
+RPM Installation
+================cat 
+1. ```yum install mailx java7```
+2. rpm -ivh jetty-solr-4.6.1-x.el6.noarch.rpm
+3. Add username/password (in admin role) to /opt/solr/jetty-solr/etc/realm.properties (e.g. ```admin: admin,admin```)

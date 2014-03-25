@@ -10,7 +10,7 @@ Summary:		Solr
 License:		GPL
 URL:			http://lucene.apache.org/solr/
 Source:			http://archive.apache.org/dist/lucene/solr/%{version}/solr-%{version}.tgz
-Source1:        	http://download.eclipse.org/jetty/%{jver}/dist/jetty-distribution-%{jver}.tar.gz
+Source1:		http://download.eclipse.org/jetty/%{jver}/dist/jetty-distribution-%{jver}.tar.gz
 Source2:		http://archive.apache.org/dist/logging/log4j/companions/extras/%{l4xver}/apache-log4j-extras-%{l4xver}.tar.gz
 Source3:		etc.default.jetty-solr
 Source4:		jmx.passwd
@@ -112,6 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,solr,solr,-)
 %attr(0755,solr,solr) %dir %{_prefix}
 %attr(0755,solr,solr) %dir %{_logprefix}
+%attr(0600,solr,solr) %dir %{_prefix}/jetty-solr/solr
 %doc
 %{_prefix}/contrib
 %{_prefix}/dist

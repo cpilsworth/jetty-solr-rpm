@@ -45,7 +45,6 @@ rm -r example/example-DIH
 rm -r example/exampledocs
 rm -r example/example-schemaless
 rm -r example/multicore
-rm -r example/solr/collection1
 #rm example/etc/logging.properties
 rm example/resources/log4j.properties
 rm example/cloud-scripts/zkcli.bat

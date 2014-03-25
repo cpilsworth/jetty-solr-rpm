@@ -4,8 +4,7 @@ solr version 4.6.1
 jetty version 8.1.10.v20130312 (to match what is bundled with solr)
 log4j extras version 1.1 (to provide better log rotation)
 
-
-goal is a serviceable base rpm for deployment of solr on jetty
+goal is a serviceable base rpm for deployment of secure solr on jetty
 
 Usage:
 ======
@@ -53,8 +52,13 @@ there is a very basic script to send emails on java Errors or Out Of Memory to a
 
 RPM build process was adapted from https://github.com/boogieshafer/jetty-solr-rpm which was in turn adapted from https://github.com/jfroche/solr-rpm
 
+This project adds basic authentication over SSL for security and more recent release of solr over the boogieshafer project 
+from which it was forked.  User authentication information needs to be setup to access this instance.
+
+https://localhost:8443/
+
 RPM Installation
-================cat 
+================ 
 1. ```yum install mailx java7```
 2. rpm -ivh jetty-solr-4.6.1-x.el6.noarch.rpm
 3. Add username/password (in admin role) to /opt/solr/jetty-solr/etc/realm.properties (e.g. ```admin: admin,admin```)

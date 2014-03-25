@@ -11,8 +11,3 @@ TODO items for rpm packaging
 -clean up java GC tuning settings
     reference: http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
     reference: http://wiki.apache.org/solr/ShawnHeisey#GC_Tuning
-
--implement some basic default security on the jetty and solr listeners
-    passwords?
-    ip access list?
-    reference: https://issues.apache.org/jira/browse/SOLR-4470
